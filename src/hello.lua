@@ -53,8 +53,8 @@ local function main()
 --	c:close()
 	
     -- run
-    --local scene = LoginScene:create()
-	local scene = HallScene:create()
+    local scene = LoginScene:create()
+	--local scene = HallScene:create()
 	--local scene = TableScene:create()
     cc.Director:getInstance():runWithScene(scene)
 end
