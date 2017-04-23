@@ -34,7 +34,7 @@ function M:initBgLayer()
 	self.client = client.new()
 	self.client:connect("192.168.1.101", 8888)
 	self.client:send("login.login", {account = "a", passwd = "a"})
-	
+	self.client:recv()
 	--c:close()
 end
 
@@ -45,17 +45,29 @@ function M:initItems()
 	self.bgLayer:addChild(accountLabel)
 	
 	local accountEdit= cc.EditBox:create({width = 201, height = 45}, "edit_bg.png")
+	accountEdit:setFontSize(24)
+	accountEdit:setFontColor(ccc3(238,130,238))
+	accountEdit:setMaxLength(16)
+	accountEdit:setInputMode(cc.EDITBOX_INPUT_MODE_EMAILADDR)  
+	accountEdit:setInputMode(cc.EDITBOX_INPUT_MODE_PHONENUMBER)
+	accountEdit:setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_WORD);
     accountEdit:setPosition(self.frameSize.width/2 + 50 , self.frameSize.height/2-80)
     self.bgLayer:addChild(accountEdit)
 	self.accountEdit = accountEdit
 
 	local passwdLabel = cc.Label:createWithSystemFont("密  码: ", "arial", 28)
     passwdLabel:setColor(ccc3(238,130,238))
+	
 	passwdLabel:setPosition(self.frameSize.width/2 - 110, self.frameSize.height/2-140)
 	self.bgLayer:addChild(passwdLabel)
 	
 	local passwdEdit= cc.EditBox:create({width = 201, height = 45}, "edit_bg.png")
-    passwdEdit:setPosition(self.frameSize.width/2 + 50 , self.frameSize.height/2-140)
+    passwdEdit:setFontSize(24)
+	passwdEdit:setFontColor(ccc3(238,130,238))
+	passwdEdit:setMaxLength(16)
+	passwdEdit:setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD)
+	--passwdEdit:setInputFlag(ccui.kEditBoxInputFlagPassword)
+	passwdEdit:setPosition(self.frameSize.width/2 + 50 , self.frameSize.height/2-140)
     self.bgLayer:addChild(passwdEdit)
 	self.passwdEdit = passwdEdit
 
@@ -80,7 +92,12 @@ function M:initItems()
     registerBtn:addClickEventListener(function(sender)
         self:BtnRegister()
     end)
-    
+end
+
+function M:OnLeave()
+	if self.client then
+		self.client:close()
+	end
 end
 
 function M:BtnLogin()
@@ -91,12 +108,21 @@ function M:BtnLogin()
 	self.client:send("login.login", {account = account, passwd = passwd})
 end
 
+function M:OnLoginResult()
+
+end
+
 function M:BtnRegister()
-	print("BtnRegister")
-	local account = self.accountEdit:getText()
-	local passwd = self.passwdEdit:getText()
+	self.client:deal_one()
+	--print("BtnRegister")
+	--local account = self.accountEdit:getText()
+	--local passwd = self.passwdEdit:getText()
 	
-	self.client:send("login.register", {account = account, passwd = passwd})
+	--self.client:send("login.register", {account = account, passwd = passwd})
+end
+
+function M:OnRegisterResult()
+
 end
 
 return M

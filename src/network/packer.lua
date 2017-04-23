@@ -1,14 +1,16 @@
--- ÍøÂçÏûÏ¢·â°ü½â°ü
+ï»¿-- ç½‘ç»œæ¶ˆæ¯å°åŒ…è§£åŒ…
 local Utils = require "utils"
+local msg_define = require "network.msg_define"
 
 local M = {}
 
--- °ü¸ñÊ½
--- Á½×Ö½Ú°ü³¤
--- Á½×Ö½ÚĞ­ÒéºÅ
--- Á½×Ö·û×Ö·û´®³¤¶È
--- ×Ö·û´®ÄÚÈİ
-function M.pack(proto_id, msg)
+-- åŒ…æ ¼å¼
+-- ä¸¤å­—èŠ‚åŒ…é•¿
+-- ä¸¤å­—èŠ‚åè®®å·
+-- ä¸¤å­—ç¬¦å­—ç¬¦ä¸²é•¿åº¦
+-- å­—ç¬¦ä¸²å†…å®¹
+function M.pack(proto_name, msg)
+	local proto_id = msg_define.name_2_id(proto_name)
     local params_str = Utils.table_2_str(msg)
 	print("msg content:", params_str)
 	local len = 2 + 2 + #params_str
@@ -16,8 +18,14 @@ function M.pack(proto_id, msg)
     return data	
 end
 
-function M.unpack()
-
+function M.unpack(data)
+	print("æ•°æ®åŒ…é•¿",#data)
+	local proto_id = data:byte(1) * 256 + data:byte(2)
+	local params_str = data:sub(3+2)
+	print(proto_id, params_str)
+	local proto_name = msg_define.id_2_name(proto_id)
+	local params = Utils.str_2_table(params_str)
+    return proto_name, params	
 end
 
 return M
