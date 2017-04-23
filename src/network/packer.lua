@@ -10,7 +10,7 @@ local M = {}
 -- ×Ö·û´®ÄÚÈİ
 function M.pack(proto_id, msg)
     local params_str = Utils.table_2_str(msg)
-	print(params_str)
+	print("msg content:", params_str)
 	local len = 2 + 2 + #params_str
 	local data = string.pack(">h>hP", len, proto_id, params_str)
     return data	

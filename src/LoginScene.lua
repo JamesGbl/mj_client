@@ -1,3 +1,5 @@
+local client = require "network.client"
+
 local M = class("LoginScene",function ()
     return cc.Scene:create()
 end)
@@ -28,6 +30,12 @@ function M:initBgLayer()
 	self:addChild(bgLayer)
 	
 	self.bgLayer = bgLayer
+	
+	self.client = client.new()
+	self.client:connect("192.168.1.101", 8888)
+	self.client:send("login.login", {account = "a", passwd = "a"})
+	
+	--c:close()
 end
 
 function M:initItems()
@@ -39,6 +47,7 @@ function M:initItems()
 	local accountEdit= cc.EditBox:create({width = 201, height = 45}, "edit_bg.png")
     accountEdit:setPosition(self.frameSize.width/2 + 50 , self.frameSize.height/2-80)
     self.bgLayer:addChild(accountEdit)
+	self.accountEdit = accountEdit
 
 	local passwdLabel = cc.Label:createWithSystemFont("密  码: ", "arial", 28)
     passwdLabel:setColor(ccc3(238,130,238))
@@ -48,6 +57,7 @@ function M:initItems()
 	local passwdEdit= cc.EditBox:create({width = 201, height = 45}, "edit_bg.png")
     passwdEdit:setPosition(self.frameSize.width/2 + 50 , self.frameSize.height/2-140)
     self.bgLayer:addChild(passwdEdit)
+	self.passwdEdit = passwdEdit
 
 	local loginBtn = ccui.Button:create("btn.png")
     loginBtn:setScale(0.6)
@@ -56,6 +66,9 @@ function M:initItems()
 	loginBtn:setTitleText("登    陆")
 	loginBtn:setTitleFontSize(35)
 	self.bgLayer:addChild(loginBtn)
+    loginBtn:addClickEventListener(function(sender)
+        self:BtnLogin()
+    end)
 	
 	local registerBtn = ccui.Button:create("btn.png")
     registerBtn:setScale(0.6)
@@ -64,11 +77,26 @@ function M:initItems()
 	registerBtn:setTitleText("注    册")
 	registerBtn:setTitleFontSize(35)
 	self.bgLayer:addChild(registerBtn)
+    registerBtn:addClickEventListener(function(sender)
+        self:BtnRegister()
+    end)
+    
+end
+
+function M:BtnLogin()
+	print("BtnLogin")
+	local account = self.accountEdit:getText()
+	local passwd = self.passwdEdit:getText()
 	
-    --self:addChild(loginBtn)
-   -- loginBtn:addClickEventListener(function(sender)
-    --    self:BtndEvent(sender)
-   --end)
+	self.client:send("login.login", {account = account, passwd = passwd})
+end
+
+function M:BtnRegister()
+	print("BtnRegister")
+	local account = self.accountEdit:getText()
+	local passwd = self.passwdEdit:getText()
+	
+	self.client:send("login.register", {account = account, passwd = passwd})
 end
 
 return M

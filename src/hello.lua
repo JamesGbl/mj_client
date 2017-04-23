@@ -2,8 +2,8 @@ CC_USE_DEPRECATED_API = true
 require "cocos.init"
 local client = require "network.client"
 local LoginScene = require "LoginScene"
-local HallScene = require "HallScene"
-local TableScene = require "TableScene"
+local HallScene = require "hall.HallScene"
+local TableScene = require "table.TableScene"
 
 -- cclog
 cclog = function(...)
@@ -47,11 +47,6 @@ local function main()
     local visibleSize = cc.Director:getInstance():getVisibleSize()
     local origin = cc.Director:getInstance():getVisibleOrigin()
 
---	local c = client.new()
---	c:connect("192.168.1.103", 8888)
---	c:send("hello", {hello=1})
---	c:close()
-	
     -- run
     local scene = LoginScene:create()
 	--local scene = HallScene:create()
