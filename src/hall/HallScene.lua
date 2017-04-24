@@ -7,7 +7,6 @@ function M:ctor()
     self.origin = cc.Director:getInstance():getVisibleOrigin()
     self.schedulerID = nil
 	self:init()
-    print(">>>>>>>>>>>>>1")
 end
 
 function M:init()
@@ -19,7 +18,6 @@ end
 function M:initBgLayer()
 	local bgLayer = cc.Layer:create()
 
-	print(self.frameSize.width/2, self.frameSize.height/2)
 	local bg = cc.Sprite:create("hall_bg.jpg")
 	bg:setAnchorPoint(cc.p(0.5, 0.5))
     bg:setPosition(self.frameSize.width/2, self.frameSize.height/2)
